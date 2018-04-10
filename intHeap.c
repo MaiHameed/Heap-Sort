@@ -1,6 +1,5 @@
 /**
- *  The functions in this module implement a Heapdata structure
- *  of integers.
+ *  The functions in this module implement a Heapdata structure*  of integers.
  */
 
 
@@ -10,14 +9,11 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <tgmath.h>
 
-int size = 0;
+int size = 0, depth = 0;
 int *heap; 
-
-int heapDelete()
-{
-  return 0;  //A dummy return statement
-}
+void maxHeapify(int);
 
 /**
  *  addHeap(thing2add) adds the "thing2add" to the Heap.
@@ -30,7 +26,7 @@ void addHeap(int thing2add)
 	}	
 	size++;
 	heap = realloc(heap, (size+1)*sizeof(int)); 
-	fprintf(stderr, "addHeap(%d)\n", thing2add);
+	//fprintf(stderr, "addHeap(%d)\n", thing2add);
 	heap[size-1]=thing2add;
 }
 
@@ -42,39 +38,68 @@ void swapHeap(int a, int b){
 	heap[b] = temp;
 }
 
+int heapDelete(){
+	size--;
+	swapHeap(0, size);
+	maxHeapify(0);
+	fprintf(stderr, "size = %d\n", size);
+	return heap[size];
+}
+
+void printDepth(){
+	int i;
+	for(i=0; i<depth; i++){
+		printf("    ");
+	}
+}
+
+void printXML(int parent){
+	int l = (2*parent)+1;
+	int r = (2*parent)+2;
+
+	printDepth();
+	printf("<node id='%d'>\n", heap[parent]);
+	depth++;
+	if(l<size){
+		printXML(l);
+	}
+	if(r<size){
+		printXML(r);
+	}
+	depth--;
+	printDepth();
+	printf("</node>\n");
+}
 
 void printHeap(){
 	int i;
-	fprintf(stderr, "HEAP ARRAY\n");
-	for(i = 0; i<size; i++){
-		fprintf(stderr, "heap[%d]=%d\n", i, heap[i]);
+	for(i=0; i<size; i++){
+		fprintf(stderr, "heap[%d] = %d\n", i, heap[i]);
 	}
-	fprintf(stderr, "\n");	
 }
 
 
 void maxHeapify(int parent)
 {	
-	fprintf(stderr, "maxHeapify(%d)\n", parent);
+	//fprintf(stderr, "maxHeapify(%d)\n", parent);
 	int l = (2*parent)+1;
 	int r = (2*parent)+2;
 	int max = parent;
 	int level = 0;
-	while(l < size && r < size){	
-		if(heap[l] > heap[max]){
-			max = l;
-		}
-		if(heap[r] > heap[max]){
-			max = r;
-		}
-		if(max != parent){
-			swapHeap(max, parent);
-			level++;
-			fprintf(stderr, "level = %d parent = %d\n\n",level, parent);
-			maxHeapify(max);
-		}
+		
+	if((l < size) && (heap[l] > heap[max])){
+		max = l;
 	}
-	fprintf(stderr, "Reached end of maxHeapify()\n");
+	if((r < size) && (heap[r] > heap[max])){
+		max = r;
+	}
+	if(max != parent){
+		swapHeap(max, parent);
+		level++;
+		//fprintf(stderr, "level = %d parent = %d\n\n",level, parent);
+		maxHeapify(max);
+	}
+	//fprintf(stderr, "Reached end of maxHeapify()\n");
 }
 
 /**

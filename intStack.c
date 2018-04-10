@@ -30,7 +30,6 @@
 static int top = 0;
 static int stack[100];
 
-
 /**
  * pop() removes the top integer on the stack and returns it.
  *
@@ -57,9 +56,18 @@ int pop()
  */
 void push(int thing2push)
 {
+	printf("%d\n", thing2push);
 	stack[top]=thing2push;
 	top++;
 }
+
+void printStack(){
+	int i;
+	for(i=0; i<top; i++){
+		fprintf(stderr, "stack[%d] = %d\n", i, stack[i]);
+	}
+}
+
 
 /**
  * isEmpty() returns a non-zero integer (not necessarily 1) if the
